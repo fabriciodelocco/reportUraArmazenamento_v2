@@ -9,6 +9,7 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 
+
 object reportUraArmazenamento_v2 {
 
   def main(args: Array[String]): Unit = {
@@ -42,12 +43,24 @@ object reportUraArmazenamento_v2 {
 
     val saida = spark.sql(query)
 
+    val pathoutputfile = "/boarding/uraoutage/reports/uraoutage_"+hoje+".csv"
+
+
     saida
       .coalesce(1)
       .write
       .format("com.databricks.spark.csv")
       .option("header", "true")
       .save("/data/uraoutage/collect/ura_armazenamento/uraoutage_"+hoje+".csv")
+
+    saida.write.
+      format("com.springml.spark.sftp").
+      option("host", "10.129.251.35").
+      option("username", "93730530").
+      option("password", "Cl@r0123").
+      option("fileType", "csv").
+      option("delimiter", ",").
+      save(pathoutputfile)
 
     spark.stop()
 

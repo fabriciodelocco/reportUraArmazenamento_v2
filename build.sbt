@@ -13,3 +13,5 @@ libraryDependencies += "org.elasticsearch" % "elasticsearch-hadoop" % "7.10.0"
 libraryDependencies += "org.elasticsearch" %% "elasticsearch-spark-20" % "7.10.0"
 // https://mvnrepository.com/artifact/joda-time/joda-time
 libraryDependencies += "joda-time" % "joda-time" % "2.10.8"
+// https://mvnrepository.com/artifact/com.springml/spark-sftp
+libraryDependencies += "com.springml" %% "spark-sftp" % "1.1.5"
