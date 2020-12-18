@@ -14,7 +14,7 @@ object reportUraArmazenamento_v2 {
 
   def main(args: Array[String]): Unit = {
 
-    val spark = SparkSession.builder().appName("ReportUraArmazenamento").getOrCreate()
+    val spark = SparkSession.builder().appName("ReportUraArmazenamento").config("spark.local.dir","/home/rosey/").getOrCreate()
     import org.joda.time.{DateTime, Instant, LocalDate}
     import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 
