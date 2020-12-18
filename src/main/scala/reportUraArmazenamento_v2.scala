@@ -46,21 +46,21 @@ object reportUraArmazenamento_v2 {
     val pathoutputfile = "/boarding/uraoutage/reports/uraoutage_"+hoje+".csv"
 
 
-/*    saida
+    saida
       .coalesce(1)
       .write
       .format("com.databricks.spark.csv")
       .option("header", "true")
-      .save("/data/uraoutage/collect/ura_armazenamento/uraoutage_"+hoje+".csv")*/
+      .save("/data/uraoutage/collect/ura_armazenamento/uraoutage_"+hoje+".csv")
 
-    saida.write.
+/*    saida.write.
       format("com.springml.spark.sftp").
       option("host", "10.129.251.35").
       option("username", "93730530").
       option("password", "Cl@r0123").
       option("fileType", "csv").
       option("delimiter", ",").
-      save(pathoutputfile)
+      save(pathoutputfile)*/
 
     spark.stop()
 
