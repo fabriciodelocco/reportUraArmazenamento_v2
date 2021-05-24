@@ -1,0 +1,153 @@
+﻿{
+ "paragraphs": [
+  {
+   "text": "import org.elasticsearch.spark._\nimport org.apache.commons._\nimport org.apache.http._\nimport org.apache.http.client._\nimport org.apache.http.client.methods.HttpPost\nimport org.apache.http.impl.client.DefaultHttpClient\nimport org.apache.spark.SparkConf\nimport org.apache.spark.sql.functions._\nimport org.apache.spark.sql.SparkSession\nimport org.apache.spark.sql.functions._\n\n    import org.joda.time.{DateTime, Instant, LocalDate}\n    import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}\n\n\n    val fmt = DateTimeFormat.forPattern(\"yyyy-MM-dd HH:mm\")\n    DateTimeFormat.forPattern(\"yyyyMMdd\")\n    //val anteontem =  new DateTime().minusDays(2).withTimeAtStartOfDay().toString(DateTimeFormat.forPattern(\"yyyy-MM-dd'T'HH:mm:SS\"))\n //   val ontem =  new DateTime().minusDays(1).withTimeAtStartOfDay().toString(DateTimeFormat.forPattern(\"yyyy-MM-dd'T'HH:mm:SS\"))\n //   val hoje = new DateTime().withTimeAtStartOfDay().toString(DateTimeFormat.forPattern(\"yyyyMMdd\"))\n\n    val anteontem =\"2021-05-21T00:00:00\"\n    val ontem =\"2021-05-22T00:00:00\"\n    val hoje = 20210523\n\n    val param = \"datahora > \\\"\" + anteontem + \"\\\" and datahora < \\\"\" + ontem + \"\\\" order by datahora asc\"\n\n    val uraarmazenamento = spark.read\n      .format(\"org.elasticsearch.spark.sql\")\n      .option(\"es.nodes\", \"srvelkcasprod01\")\n      .option(\"es.port\", \"9200\")\n      .option(\"es.net.ssl\", \"true\")\n      .option(\"es.nodes.discovery\", \"false\")\n      .option(\"es.net.http.auth.user\", \"elastic\")\n      .option(\"es.net.http.auth.pass\", \"2BrR8mEn@Oss\")\n      .option(\"es.net.ssl.cert.allow.self.signed\", \"true\")\n      .load(\"ura_armazenamento/_doc\")\n\n    uraarmazenamento.createOrReplaceTempView(\"uraarmazenamento\")\n\n    val query = \"select * from uraarmazenamento where \" + param\n\n    val saida = spark.sql(query)\n\n    val pathoutputfile = \"/boarding/uraoutage/reports/uraoutage_\"+hoje+\".csv\"\n\n\n    saida\n      .coalesce(1)\n      .write\n      .format(\"com.databricks.spark.csv\")\n      .option(\"header\", \"true\")\n      .save(\"/data/uraoutage/collect/ura_armazenamento/uraoutage_\"+hoje+\".csv\")",
+   "user": "anonymous",
+   "dateUpdated": "2021-05-24T17:39:59-0300",
+   "config": {
+    "editorSetting": {
+     "language": "scala",
+     "editOnDblClick": false,
+     "completionKey": "TAB",
+     "completionSupport": true
+    },
+    "colWidth": 12.0,
+    "editorMode": "ace/mode/scala",
+    "fontSize": 9.0,
+    "results": {},
+    "enabled": true
+   },
+   "settings": {
+    "params": {},
+    "forms": {}
+   },
+   "results": {
+    "code": "SUCCESS",
+    "msg": [
+     {
+      "type": "TEXT",
+      "data": "import org.elasticsearch.spark._\nimport org.apache.commons._\nimport org.apache.http._\nimport org.apache.http.client._\nimport org.apache.http.client.methods.HttpPost\nimport org.apache.http.impl.client.DefaultHttpClient\nimport org.apache.spark.SparkConf\nimport org.apache.spark.sql.functions._\nimport org.apache.spark.sql.SparkSession\nimport org.apache.spark.sql.functions._\nimport org.joda.time.{DateTime, Instant, LocalDate}\nimport org.joda.time.format.{DateTimeFormat, DateTimeFormatter}\n\u001b[1m\u001b[34mfmt\u001b[0m: \u001b[1m\u001b[32morg.joda.time.format.DateTimeFormatter\u001b[0m = org.joda.time.format.DateTimeFormatter@608afddf\n\u001b[1m\u001b[34manteontem\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = 2021-05-21T00:00:00\n\u001b[1m\u001b[34montem\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = 2021-05-22T00:00:00\n\u001b[1m\u001b[34mhoje\u001b[0m: \u001b[1m\u001b[32mInt\u001b[0m = 20210523\n\u001b[1m\u001b[34mpara..."
+     }
+    ]
+   },
+   "apps": [],
+   "runtimeInfos": {
+    "jobUrl": {
+     "propertyName": "jobUrl",
+     "label": "SPARK JOB",
+     "tooltip": "View in Spark web UI",
+     "group": "spark",
+     "values": [
+      {
+       "jobUrl": "http://srvhdpcasprod02:4040/jobs/job?id=550"
+      },
+      {
+       "jobUrl": "http://srvhdpcasprod02:4040/jobs/job?id=551"
+      }
+     ],
+     "interpreterSettingId": "spark"
+    }
+   },
+   "progressUpdateIntervalMs": 500.0,
+   "jobName": "paragraph_1621888799626_870430876",
+   "id": "paragraph_1621888799626_870430876",
+   "dateCreated": "2021-05-24T17:39:59-0300",
+   "dateStarted": "2021-05-24T17:39:59-0300",
+   "dateFinished": "2021-05-24T17:43:53-0300",
+   "status": "FINISHED"
+  },
+  {
+   "settings": {
+    "params": {},
+    "forms": {}
+   },
+   "apps": [],
+   "status": "READY",
+   "text": "    saida.write.\n      format(\"com.springml.spark.sftp\").\n      option(\"host\", \"10.129.251.35\").\n      option(\"username\", \"93730530\").\n      option(\"password\", \"Cl@r0123\").\n      save(pathoutputfile)\n\n",
+   "config": {}
+  },
+  {
+   "text": "   val fmt = DateTimeFormat.forPattern(\"yyyy-MM-dd HH:mm\")\n    DateTimeFormat.forPattern(\"yyyyMMdd\")\n    //val anteontem =  new DateTime().minusDays(2).withTimeAtStartOfDay().toString(DateTimeFormat.forPattern(\"yyyy-MM-dd'T'HH:mm:SS\"))\n //   val ontem =  new DateTime().minusDays(1).withTimeAtStartOfDay().toString(DateTimeFormat.forPattern(\"yyyy-MM-dd'T'HH:mm:SS\"))\n //   val hoje = new DateTime().withTimeAtStartOfDay().toString(DateTimeFormat.forPattern(\"yyyyMMdd\"))\n\n    val anteontem =\"2021-05-19T00:00:00\"\n    val ontem =\"2021-05-20T00:00:00\"\n    val hoje = 20210523\n\n    val param = \"datahora > \\\"\" + anteontem + \"\\\" and datahora < \\\"\" + ontem + \"\\\" order by datahora asc\"\n\n    val uraarmazenamento = spark.read\n      .format(\"org.elasticsearch.spark.sql\")\n      .option(\"es.nodes\", \"srvelkcasprod01\")\n      .option(\"es.port\", \"9200\")\n      .option(\"es.net.ssl\", \"true\")\n      .option(\"es.nodes.discovery\", \"false\")\n      .option(\"es.net.http.auth.user\", \"elastic\")\n      .option(\"es.net.http.auth.pass\", \"2BrR8mEn@Oss\")\n      .option(\"es.net.ssl.cert.allow.self.signed\", \"true\")\n      .load(\"ura_armazenamento/_doc\")\n\n    uraarmazenamento.createOrReplaceTempView(\"uraarmazenamento\")\n\n    val query = \"select * from uraarmazenamento where \" + param\n\n    val saida = spark.sql(query)\n\n    val pathoutputfile = \"/boarding/uraoutage/reports/uraoutage_\"+hoje+\".csv\"\n\n\n    saida\n      .coalesce(1)\n      .write\n      .format(\"com.databricks.spark.csv\")\n      .option(\"header\", \"true\")\n      .save(\"/data/uraoutage/collect/ura_armazenamento/uraoutage_\"+hoje+\".csv\")\n",
+   "user": "anonymous",
+   "dateUpdated": "2021-05-24T18:14:13-0300",
+   "config": {},
+   "settings": {
+    "params": {},
+    "forms": {}
+   },
+   "results": {
+    "code": "ERROR",
+    "msg": [
+     {
+      "type": "TEXT",
+      "data": "org.apache.spark.sql.AnalysisException: path hdfs://nameservice1/data/uraoutage/collect/ura_armazenamento/uraoutage_20210523.csv already exists.;\n  at org.apache.spark.sql.execution.datasources.InsertIntoHadoopFsRelationCommand.run(InsertIntoHadoopFsRelationCommand.scala:114)\n  at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult$lzycompute(commands.scala:104)\n  at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult(commands.scala:102)\n  at org.apache.spark.sql.execution.command.DataWritingCommandExec.doExecute(commands.scala:122)\n  at org.apache.spark.sql.execution.SparkPlan$$anonfun$execute$1.apply(SparkPlan.scala:131)\n  at org.apache.spark.sql.execution.SparkPlan$$anonfun$execute$1.apply(SparkPlan.scala:127)\n  at org.apache.spark.sql.execution.SparkPlan$$anonfun$executeQuery$1.apply(SparkPlan.scala:155)\n  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)\n  at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:152)\n  at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:127)\n  at org.apache.spark.sql.execution.QueryExecution.toRdd$lzycompute(QueryExecution.scala:80)\n  at org.apache.spark.sql.execution.QueryExecution.toRdd(QueryExecution.scala:80)\n  at org.apache.spark.sql.DataFrameWriter$$anonfun$runCommand$1.apply(DataFrameWriter.scala:677)\n  at org.apache.spark.sql.DataFrameWriter$$anonfun$runCommand$1.apply(DataFrameWriter.scala:677)\n  at org.apache.spark.sql.execution.SQLExecution$$anonfun$withNewExecutionId$1.apply(SQLExecution.scala:78)\n  at org.apache.spark.sql.execution.SQLExecution$.withSQLConfPropagated(SQLExecution.scala:125)\n  at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:73)\n  at org.apache.spark.sql.DataFrameWriter.runCommand(DataFrameWriter.scala:677)\n  at org.apache.spark.sql.DataFrameWriter.saveToV1Source(DataFrameWriter.scala:285)\n  at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:271)\n  at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:229)\n  ... 135 elided\n"
+     }
+    ]
+   },
+   "apps": [],
+   "runtimeInfos": {},
+   "progressUpdateIntervalMs": 500.0,
+   "jobName": "paragraph_1621890853841_676869110",
+   "id": "paragraph_1621890853841_676869110",
+   "dateCreated": "2021-05-24T18:14:13-0300",
+   "dateStarted": "2021-05-24T18:14:13-0300",
+   "dateFinished": "2021-05-24T18:16:32-0300",
+   "status": "ERROR"
+  },
+  {
+   "text": "   val fmt = DateTimeFormat.forPattern(\"yyyy-MM-dd HH:mm\")\n    DateTimeFormat.forPattern(\"yyyyMMdd\")\n    //val anteontem =  new DateTime().minusDays(2).withTimeAtStartOfDay().toString(DateTimeFormat.forPattern(\"yyyy-MM-dd'T'HH:mm:SS\"))\n //   val ontem =  new DateTime().minusDays(1).withTimeAtStartOfDay().toString(DateTimeFormat.forPattern(\"yyyy-MM-dd'T'HH:mm:SS\"))\n //   val hoje = new DateTime().withTimeAtStartOfDay().toString(DateTimeFormat.forPattern(\"yyyyMMdd\"))\n\n    val anteontem =\"2021-05-18T00:00:00\"\n    val ontem =\"2021-05-19T00:00:00\"\n    val hoje = 20210520\n\n    val param = \"datahora > \\\"\" + anteontem + \"\\\" and datahora < \\\"\" + ontem + \"\\\" order by datahora asc\"\n\n    val uraarmazenamento = spark.read\n      .format(\"org.elasticsearch.spark.sql\")\n      .option(\"es.nodes\", \"srvelkcasprod01\")\n      .option(\"es.port\", \"9200\")\n      .option(\"es.net.ssl\", \"true\")\n      .option(\"es.nodes.discovery\", \"false\")\n      .option(\"es.net.http.auth.user\", \"elastic\")\n      .option(\"es.net.http.auth.pass\", \"2BrR8mEn@Oss\")\n      .option(\"es.net.ssl.cert.allow.self.signed\", \"true\")\n      .load(\"ura_armazenamento/_doc\")\n\n    uraarmazenamento.createOrReplaceTempView(\"uraarmazenamento\")\n\n    val query = \"select * from uraarmazenamento where \" + param\n\n    val saida = spark.sql(query)\n\n    val pathoutputfile = \"/boarding/uraoutage/reports/uraoutage_\"+hoje+\".csv\"\n\n\n    saida\n      .coalesce(1)\n      .write\n      .format(\"com.databricks.spark.csv\")\n      .option(\"header\", \"true\")\n      .save(\"/data/uraoutage/collect/ura_armazenamento/uraoutage_\"+hoje+\".csv\")\n\n",
+   "user": "anonymous",
+   "dateUpdated": "2021-05-24T18:12:55-0300",
+   "config": {},
+   "settings": {
+    "params": {},
+    "forms": {}
+   },
+   "results": {
+    "code": "SUCCESS",
+    "msg": [
+     {
+      "type": "TEXT",
+      "data": "\u001b[1m\u001b[34mfmt\u001b[0m: \u001b[1m\u001b[32morg.joda.time.format.DateTimeFormatter\u001b[0m = org.joda.time.format.DateTimeFormatter@608afddf\n\u001b[1m\u001b[34manteontem\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = 2021-05-18T00:00:00\n\u001b[1m\u001b[34montem\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = 2021-05-19T00:00:00\n\u001b[1m\u001b[34mhoje\u001b[0m: \u001b[1m\u001b[32mInt\u001b[0m = 20210520\n\u001b[1m\u001b[34mparam\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = datahora > \"2021-05-18T00:00:00\" and datahora < \"2021-05-19T00:00:00\" order by datahora asc\n\u001b[1m\u001b[34muraarmazenamento\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [datahora: timestamp, estacao: string ... 3 more fields]\n\u001b[1m\u001b[34mquery\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = select * from uraarmazenamento where datahora > \"2021-05-18T00:00:00\" and datahora < \"2021-05-19T00:00:00\" order by datahora asc\n\u001b[1m\u001b[34msaida\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m..."
+     }
+    ]
+   },
+   "apps": [],
+   "runtimeInfos": {
+    "jobUrl": {
+     "propertyName": "jobUrl",
+     "label": "SPARK JOB",
+     "tooltip": "View in Spark web UI",
+     "group": "spark",
+     "values": [
+      {
+       "jobUrl": "http://srvhdpcasprod02:4040/jobs/job?id=554"
+      },
+      {
+       "jobUrl": "http://srvhdpcasprod02:4040/jobs/job?id=555"
+      }
+     ],
+     "interpreterSettingId": "spark"
+    }
+   },
+   "progressUpdateIntervalMs": 500.0,
+   "jobName": "paragraph_1621890775769_777050960",
+   "id": "paragraph_1621890775769_777050960",
+   "dateCreated": "2021-05-24T18:12:55-0300",
+   "dateStarted": "2021-05-24T18:12:55-0300",
+   "dateFinished": "2021-05-24T18:16:30-0300",
+   "status": "FINISHED"
+  }
+ ],
+ "name": "Zeppelin Notebook",
+ "id": "",
+ "noteParams": {},
+ "noteForms": {},
+ "angularObjects": {},
+ "config": {
+  "isZeppelinNotebookCronEnable": false,
+  "looknfeel": "default",
+  "personalizedMode": "false"
+ },
+ "info": {}
+}
